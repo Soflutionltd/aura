@@ -5,7 +5,7 @@ import json, urllib.request, platform, datetime
 from pathlib import Path
 
 OLLAMA_URL = "http://localhost:11434/api/chat"
-MODEL = "soflution-llm"
+MODEL = "aura"
 REPO_ROOT = Path(__file__).parent.parent
 
 def query(prompt):
@@ -15,7 +15,7 @@ def query(prompt):
         return json.loads(r.read())["message"]["content"]
 
 def main():
-    print("🤖 Soflution LLM Self-Improvement Agent")
+    print("🤖 AURA Self-Improvement Agent")
     print(f"Model: {MODEL} | Hardware: {platform.machine()}")
     
     tests = [
