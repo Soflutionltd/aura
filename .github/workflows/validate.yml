@@ -1,0 +1,78 @@
+name: AURA Validate PR
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "Modelfile"
+      - "benchmarks/**"
+      - "scripts/**"
+      - "orchestrator/**"
+
+jobs:
+  validate:
+    name: Benchmark & Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve &
+          sleep 5
+
+      - name: Pull base model and create AURA
+        run: |
+          ollama pull gemma4:31b || ollama pull gemma3:12b
+          ollama create aura -f Modelfile
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Get baseline (main branch Modelfile)
+        run: |
+          git show origin/main:Modelfile > /tmp/Modelfile.baseline
+          ollama create aura-baseline -f /tmp/Modelfile.baseline
+          python3 scripts/benchmark_ci.py aura-baseline > /tmp/baseline.json
+
+      - name: Benchmark PR version
+        run: |
+          python3 scripts/benchmark_ci.py aura > /tmp/improved.json
+
+      - name: Compare and decide
+        id: compare
+        run: |
+          python3 -c "
+          import json, sys
+          baseline = json.load(open('/tmp/baseline.json'))
+          improved = json.load(open('/tmp/improved.json'))
+          gain = improved['total'] - baseline['total']
+          print(f'Baseline: {baseline[\"total\"]}')
+          print(f'Improved: {improved[\"total\"]}')
+          print(f'Gain: {gain:+.1f}%')
+          if gain < 1.0:
+              print('FAIL: gain below 1% threshold')
+              sys.exit(1)
+          print('PASS: improvement validated')
+          "
+
+      - name: Auto-approve if passing
+        if: success()
+        uses: hmarr/auto-approve-action@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-merge if approved
+        if: success()
+        run: gh pr merge ${{ github.event.pull_request.number }} --squash --auto
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
