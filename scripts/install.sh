@@ -1,12 +1,22 @@
 #!/bin/bash
 set -e
-echo "🚀 Soflution LLM - Installation"
+echo "=== AURA Installation ==="
+echo "Autonomous Unified Reasoning Architecture"
+echo ""
+
 if ! command -v ollama &> /dev/null; then
-    echo "❌ Install Ollama first: https://ollama.com"
-    exit 1
+    echo "Ollama not found. Installing..."
+    curl -fsSL https://ollama.com/install.sh | sh
 fi
-echo "📥 Pulling Gemma 4 31B (~20GB)..."
-ollama pull gemma4:31b
-echo "⚙️ Creating Soflution LLM..."
-ollama create soflution-llm -f Modelfile
-echo "✅ Done! Run: ollama run soflution-llm"
+
+echo "Pulling Qwen 3.5-35B-A3B (Apache 2.0, MoE, ~20GB)..."
+ollama pull qwen3.5:35b-a3b
+
+echo "Creating AURA model..."
+ollama create aura -f Modelfile
+
+echo ""
+echo "AURA is ready!"
+echo "Run:  ollama run aura"
+echo "Benchmark:  python3 scripts/self_improve.py"
+echo "Daemon:  python3 orchestrator/daemon.py"
