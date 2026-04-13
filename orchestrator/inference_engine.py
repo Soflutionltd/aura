@@ -23,6 +23,8 @@ from typing import Optional
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CACHE_DIR = REPO_ROOT / ".prompt-cache"
+VENV_MLX = REPO_ROOT / ".venv-mlx"
+MLX_PYTHON = VENV_MLX / "bin" / "python"
 
 
 # ── Hardware detection ────────────────────────────────────────────────────────

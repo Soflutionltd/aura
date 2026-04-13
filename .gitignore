@@ -1,0 +1,13 @@
+.venv*/
+vendor/
+__pycache__/
+*.pyc
+.prompt-cache/
+trajectories/
+fine-tunes/
+federated/
+world-convergence/
+expert-stats/
+benchmarks/
+*.log
+.DS_Store

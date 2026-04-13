@@ -69,14 +69,42 @@ echo "[3/4] Setting up IPFS storage node..."
 bash scripts/install_ipfs.sh
 echo ""
 
-# ── 4. Install acceleration (Ultra/Balanced only) ────────────
+# ── 4. Install acceleration (Ultra/Balanced only, Apple Silicon) ──
 if [ "$MODE" = "ultra" ] || [ "$MODE" = "balanced" ]; then
     echo "[4/4] Installing MLX acceleration (DFlash + TurboQuant)..."
-    pip3 install mlx mlx-lm 2>/dev/null || true
-    if [ ! -d "vendor/dflash-mlx" ]; then
-        git clone https://github.com/Aryagm/dflash-mlx.git vendor/dflash-mlx 2>/dev/null || true
+
+    # Find Python 3.12 (required for MLX, 3.13+ not supported)
+    PYTHON_MLX=""
+    for p in python3.12 python3.11 python3.10; do
+        if command -v $p &> /dev/null; then
+            PYTHON_MLX=$(command -v $p)
+            break
+        fi
+    done
+
+    if [ -z "$PYTHON_MLX" ]; then
+        echo "  Python 3.10-3.12 required for MLX. Installing..."
+        brew install python@3.12 2>/dev/null || true
+        PYTHON_MLX=$(command -v python3.12)
     fi
-    echo "Acceleration ready."
+
+    if [ -n "$PYTHON_MLX" ]; then
+        # Create venv for MLX
+        echo "  Creating MLX environment..."
+        $PYTHON_MLX -m venv .venv-mlx 2>/dev/null || true
+        .venv-mlx/bin/pip install -q mlx mlx-lm 2>/dev/null
+
+        # Install DFlash (3-5x speedup via speculative decoding)
+        if [ ! -d "vendor/dflash-mlx" ]; then
+            echo "  Installing DFlash speculative decoding..."
+            mkdir -p vendor
+            git clone --depth 1 https://github.com/Aryagm/dflash-mlx.git vendor/dflash-mlx 2>/dev/null || true
+            .venv-mlx/bin/pip install -q -e vendor/dflash-mlx 2>/dev/null || true
+        fi
+        echo "  MLX + DFlash installed. Apple Silicon acceleration active."
+    else
+        echo "  Could not install MLX. Using Ollama (still fast)."
+    fi
 else
     echo "[4/4] Skipping acceleration (not needed for $MODE)"
 fi
