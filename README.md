@@ -1,108 +1,91 @@
-<div align="center">
+# AURA — Autonomous Unified Reasoning Architecture
 
-# ✦ AURA
-### Autonomous Unified Reasoning Architecture
+The most advanced local AI agent in the world. Free. Private. Self-improving.
 
-**The world's first community-driven, self-improving local AI.**
-Zero tokens. Zero cost. Zero limits.
+AURA is a decentralized, self-evolving AI that runs entirely on your machine. It combines a state-of-the-art Mixture-of-Experts model (distilled from Claude Opus 4.6) with a lightweight World Model simulator, autonomous agent capabilities, and a community-powered federated learning network.
 
-![Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
-![Gemma 4 31B](https://img.shields.io/badge/Base_Model-Gemma_4_31B-green.svg)
-![Ollama](https://img.shields.io/badge/Runtime-Ollama-orange.svg)
-![Apple Silicon](https://img.shields.io/badge/Apple_Silicon-Optimized-black.svg)
+**No cloud. No tokens. No subscriptions. Forever.**
 
-</div>
+## What makes AURA unique
 
----
+**World-Enhanced MoE**: AURA uses a LeWorldModel (15M params) to simulate consequences before acting. Instead of trial-and-error (10-15 tool calls), it anticipates outcomes and executes the best path (2-4 calls). Over time, the MoE absorbs these capabilities and becomes a single ultra-intelligent model.
 
-## The Vision
+**Self-improving**: A background daemon continuously diagnoses weaknesses, generates training data, fine-tunes via LoRA, and validates improvements. Every cycle makes AURA smarter.
 
-Every AI model today is a black box controlled by a corporation.
+**Federated learning**: Thousands of users contribute anonymized improvements. Privacy-preserving (Differential Privacy), quality-gated (3 validators minimum), and rewarded with World Wide Currency tokens.
 
-You pay per token. Your data leaves your machine. You have no control.
+**Autonomous agent**: 7 built-in tools (code execution, file system, RAG search, terminal, web search, image analysis, self-improvement). AURA plans, executes, verifies, and iterates autonomously.
 
-**AURA is different.** It runs entirely on your hardware. It improves itself using its own intelligence. Every contribution from every machine in the world makes it smarter. No one owns it. Everyone builds it.
+**Hardware adaptive**: Automatically detects your system and selects the optimal configuration. From 4GB laptops to 96GB workstations, everyone gets the best AURA for their hardware.
 
-This is what AI should have been from the start.
-
----
-
-## Why AURA is different
-
-| | |
-|---|---|
-| **∅ Zero token cost** | Runs 100% locally via Ollama. No API keys. No per-request fees. Ever. |
-| **↺ Self-improving** | AURA analyzes its own configuration and proposes improvements. The model makes itself better. |
-| **◎ Community-driven** | Every contributor's benchmark results and fine-tunes are merged back. Every machine helps. |
-| **⊡ Fully private** | Your prompts, your code, your data — all stay on your machine. Nothing is sent anywhere. |
-| **⬡ No gatekeepers** | Apache 2.0 license. Use it, fork it, build on it commercially. No restrictions. |
-| **◈ Multimodal** | Built on Gemma 4 31B. Handles text, images, and code with a 256K context window. |
-
----
-
-## Get started in 3 commands
+## Quick start
 
 ```bash
-# 1. Clone the project
-git clone https://github.com/Soflution1/aura-llm
-
-# 2. Install AURA
-./scripts/install.sh
-
-# 3. Run AURA locally
+git clone https://github.com/Soflution1/aura.git && cd aura
+bash scripts/install.sh
 ollama run aura
 ```
 
----
+One command installs everything: Ollama, the AURA model, IPFS, and acceleration layers. The installer detects your hardware and selects the right model tier automatically.
 
-## How to contribute
-
-**01 — Run the self-improvement agent**
-Run `python3 scripts/self_improve.py`. AURA analyzes itself and generates benchmark results. Submit a PR. Takes 5 minutes.
-
-**02 — Improve the Modelfile**
-Found better parameters for your hardware? Edit the Modelfile, benchmark it, and submit. Your improvement ships to everyone.
-
-**03 — Add a fine-tune**
-Specialized AURA for medicine, law, Rust, or your language? Add it to `fine-tunes/` with your training recipe.
-
-**04 — Improve the agent**
-The self-improvement agent in `scripts/self_improve.py` is the heart of AURA. Make it smarter. This is the most impactful contribution.
-
----
-
-## Hardware compatibility
-
-| Hardware | RAM | Speed | Status |
-|----------|-----|-------|--------|
-| Mac M2 Max | 96 GB | ~30 tok/s | ✅ Tested |
-| Mac M3/M4 Ultra | 192 GB | ~60 tok/s | ✅ Compatible |
-| RTX 4090 | 24 GB VRAM | ~40 tok/s | ✅ Compatible |
-| RTX 5090 | 32 GB VRAM | ~55 tok/s | 🔜 Coming soon |
-| Any machine 32GB+ | 32 GB RAM | ~5 tok/s | ✅ Via SSD offload |
-
----
-
-## Project structure
+## Architecture
 
 ```
-aura/
-├── Modelfile              # AURA's core configuration
-├── scripts/
-│   ├── install.sh         # One-command setup
-│   └── self_improve.py    # Self-improvement agent
-├── fine-tunes/            # Community fine-tune contributions
-├── benchmarks/            # Benchmark results by hardware
-└── docs/CONTRIBUTING.md
+User
+  |
+  v
+AURA App (Tauri: Rust + HTML/JS/CSS)
+  |
+  +-- Gemma 4 26B-A4B Opus Distill (MoE, 4B active params)
+  |     Main brain: reasoning, tool calling, conversation
+  |
+  +-- LeWorldModel (15M params, <100 Mo, <200ms)
+  |     Simulates outcomes before acting
+  |
+  +-- Agent Orchestrator (ReAct loop + World Model)
+  |     7 autonomous tools, max 15 iterations
+  |
+  +-- MemoryPilot (persistent memory across conversations)
+  |
+  +-- DFlash + TurboQuant (3-5x speed, 4.6x KV compression)
+  |
+  +-- Self-Improvement Engine (diagnose, generate, train, validate)
+  |
+  +-- IPFS Node (distributed storage for LoRA deltas)
+  |
+  +-- World Wide Currency Node (mining + rewards)
 ```
 
----
+## Model tiers
 
-<div align="center">
+| Mode | RAM | Model | Active params | Speed |
+|------|-----|-------|---------------|-------|
+| Ultra | 32+ GB | Gemma 4 26B-A4B Opus Q8 | 4B | 160-250 t/s |
+| Balanced | 16+ GB | Gemma 4 26B-A4B Opus IQ4_NL | 4B | 200+ t/s |
+| Éco | 8+ GB | Gemma 4 E4B | 4B | 300+ t/s |
+| Minimal | 4+ GB | Gemma 4 E2B | 2B | 400+ t/s |
 
-Built by [Soflution Ltd](https://soflution.com) · Apache 2.0
+## Roadmap
 
-**AURA is not a product. It is a protocol.**
-**Anyone can run it. Anyone can improve it. No one owns it.**
+**Phase 1 (done)**: Chat + Agent + LeWM + MoE Opus Distill + DFlash + IPFS + WWC
 
-</div>
+**Phase 2 (done)**: Federated learning + Trajectory KD + DPO + Expert specialization
+
+**Phase 3 (done)**: World-Enhanced MoE convergence (MoE absorbs LeWM capabilities)
+
+## World Wide Currency (WWC)
+
+Decentralized token that rewards contributors. Mining = improving AURA (Proof of Useful Work). Degressive rewards protect against inflation as the network grows.
+
+Blockchain: Substrate (Rust, Apache 2.0). Storage: IPFS (off-chain) + hash on-chain.
+
+## License
+
+Apache 2.0
+
+## Created by
+
+Antoine Pinelli / Soflution Ltd (UK, Companies House 16910478)
+
+https://github.com/Soflution1/aura
+https://github.com/Soflution1/wwc
