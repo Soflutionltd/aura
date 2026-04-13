@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "model": "qwen3.5:35b-a3b",
+  "model_size_mb": 23000,
+  "min_ram_gb": 8,
+  "lora_version": 0,
+  "lora_url": "",
+  "lora_size_mb": 0,
+  "ipfs_cid": "",
+  "changelog": "Initial release: Qwen 3.5-35B-A3B base model"
+}
