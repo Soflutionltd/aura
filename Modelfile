@@ -1,4 +1,4 @@
-FROM hf.co/TeichAI/gemma-4-26B-A4B-it-Claude-Opus-Distill-GGUF:Q8_0
+FROM hf.co/TeichAI/gemma-4-26B-A4B-it-Claude-Opus-Distill-GGUF:Q4_K_M
 
 PARAMETER temperature 0.7
 PARAMETER top_p 0.95
